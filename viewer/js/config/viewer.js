@@ -24,12 +24,12 @@ define([
         defaultMapClickMode: 'identify',
         // map options, passed to map constructor. see: https://developers.arcgis.com/javascript/jsapi/map-amd.html#map1
         mapOptions: {
-            basemap: 'streets',
-            center: [-96.59179687497497, 39.09596293629694],
+            basemap: 'osm',
+            center: [-89.890137, 25.463115],
             zoom: 5,
             sliderStyle: 'small'
         },
-        // panes: {
+         panes: {
         // 	left: {
         // 		splitter: true
         // 	},
@@ -40,65 +40,29 @@ define([
         // 		splitter: true,
         // 		collapsible: true
         // 	},
-        // 	bottom: {
-        // 		id: 'sidebarBottom',
-        // 		placeAt: 'outer',
-        // 		splitter: true,
-        // 		collapsible: true,
-        // 		region: 'bottom'
-        // 	},
-        // 	top: {
-        // 		id: 'sidebarTop',
-        // 		placeAt: 'outer',
-        // 		collapsible: true,
-        // 		splitter: true,
-        // 		region: 'top'
-        // 	}
-        // },
+         	bottom: {
+         		id: 'sidebarBottom',
+         		placeAt: 'outer',
+         		splitter: true,
+         		collapsible: true,
+         		region: 'bottom',
+				style: 'height:200px;',
+    			content: '<div id="attributesContainer"></div>'
+        	}//,
+         	//top: {
+        	//	id: 'sidebarTop',
+         	//	placeAt: 'outer',
+         	//	collapsible: true,
+         	//	splitter: true,
+         	//	region: 'top'
+        	//}
+         },
         // collapseButtonsPane: 'center', //center or outer
 
         // operationalLayers: Array of Layers to load on top of the basemap: valid 'type' options: 'dynamic', 'tiled', 'feature'.
         // The 'options' object is passed as the layers options for constructor. Title will be used in the legend only. id's must be unique and have no spaces.
         // 3 'mode' options: MODE_SNAPSHOT = 0, MODE_ONDEMAND = 1, MODE_SELECTION = 2
-        operationalLayers: [{
-            type: 'feature',
-            url: 'http://services1.arcgis.com/g2TonOxuRkIqSOFx/arcgis/rest/services/MeetUpHomeTowns/FeatureServer/0',
-            title: 'STLJS Meetup Home Towns',
-            options: {
-                id: 'meetupHometowns',
-                opacity: 1.0,
-                visible: true,
-                outFields: ['*'],
-                mode: 0
-            },
-            editorLayerInfos: {
-                disableGeometryUpdate: false
-            }
-  }, {
-            type: 'feature',
-            url: 'http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0',
-            title: 'San Francisco 311 Incidents',
-            options: {
-                id: 'sf311Incidents',
-                opacity: 1.0,
-                visible: true,
-                outFields: ['req_type', 'req_date', 'req_time', 'address', 'district'],
-                mode: 0
-            }
-  }, {
-            type: 'dynamic',
-            url: 'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/PublicSafety/PublicSafetyOperationalLayers/MapServer',
-            title: 'Louisville Public Safety',
-            options: {
-                id: 'louisvillePubSafety',
-                opacity: 1.0,
-                visible: true,
-                imageParameters: imageParameters
-            },
-            identifyLayerInfos: {
-                layerIds: [2, 4, 5, 8, 12, 21]
-            }
-  }, {
+        operationalLayers: [ {
             type: 'dynamic',
             url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer',
             title: 'Damage Assessment',
@@ -144,11 +108,11 @@ define([
             identify: {
                 include: true,
                 id: 'identify',
-                type: 'titlePane',
+                type: 'invisible',
                 path: 'gis/dijit/Identify',
                 title: 'Identify',
                 open: false,
-                position: 3,
+                position: 11,
                 options: 'config/identify'
             },
             basemaps: {
@@ -187,7 +151,23 @@ define([
                     scalebarStyle: 'line',
                     scalebarUnit: 'dual'
                 }
-            },
+            },  
+			navtools: {
+        		include: true,
+        		id: 'navtools',
+        		type: 'titlePane',
+        		canFloat: false,
+        		path: 'gis/dijit/NavTools',
+        		title: 'Navigation Tools',
+        		open: false,
+        		position: 0,
+        		placeAt: 'right',
+        		options: {
+            		map: true,
+            		mapRightClickMenu: true,
+            		mapClickMode: true
+        		}
+			},
             locateButton: {
                 include: true,
                 id: 'locateButton',
@@ -230,10 +210,10 @@ define([
                 options: {
                     map: true,
                     extent: new Extent({
-                        xmin: -180,
-                        ymin: -85,
-                        xmax: 180,
-                        ymax: 85,
+                        xmin: -97,
+                        ymin: -82,
+                        xmax: 28,
+                        ymax: 22,
                         spatialReference: {
                             wkid: 4326
                         }
@@ -269,28 +249,34 @@ define([
                     overlayReorder: true
                 }
             },
-            bookmarks: {
+			search: {
+    			include: true,
+    			id: 'search',
+    			type: 'titlePane',
+    			path: 'gis/dijit/Search',
+    			canFloat: true,
+    			title: 'Search',
+    			open: false,
+    			position: 2,
+    			options: 'config/searchWidget'
+			},
+            measure: {
                 include: true,
-                id: 'bookmarks',
-                type: 'titlePane',
-                path: 'gis/dijit/Bookmarks',
-                title: 'Bookmarks',
-                open: false,
-                position: 2,
-                options: 'config/bookmarks'
-            },
-            find: {
-                include: true,
-                id: 'find',
+                id: 'measurement',
                 type: 'titlePane',
                 canFloat: true,
-                path: 'gis/dijit/Find',
-                title: 'Find',
+                path: 'gis/dijit/Measurement',
+                title: 'Measurement',
                 open: false,
                 position: 3,
-                options: 'config/find'
+                options: {
+                    map: true,
+                    mapClickMode: true,
+                    defaultAreaUnit: units.SQUARE_MILES,
+                    defaultLengthUnit: units.MILES
+                }
             },
-            draw: {
+			draw: {
                 include: true,
                 id: 'draw',
                 type: 'titlePane',
@@ -304,20 +290,18 @@ define([
                     mapClickMode: true
                 }
             },
-            measure: {
+			streetview: {
                 include: true,
-                id: 'measurement',
+                id: 'streetview',
                 type: 'titlePane',
                 canFloat: true,
-                path: 'gis/dijit/Measurement',
-                title: 'Measurement',
-                open: false,
                 position: 5,
+                path: 'gis/dijit/StreetView',
+                title: 'Google Street View',
                 options: {
                     map: true,
                     mapClickMode: true,
-                    defaultAreaUnit: units.SQUARE_MILES,
-                    defaultLengthUnit: units.MILES
+                    mapRightClickMenu: true
                 }
             },
             print: {
@@ -339,35 +323,14 @@ define([
                     defaultLayout: 'Letter ANSI A Landscape'
                 }
             },
-            directions: {
-                include: true,
-                id: 'directions',
-                type: 'titlePane',
-                path: 'gis/dijit/Directions',
-                title: 'Directions',
-                open: false,
-                position: 7,
-                options: {
-                    map: true,
-                    mapRightClickMenu: true,
-                    options: {
-                        routeTaskUrl: 'http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route',
-                        routeParams: {
-                            directionsLanguage: 'en-US',
-                            directionsLengthUnits: units.MILES
-                        },
-                        active: false //for 3.12, starts active by default, which we dont want as it interfears with mapClickMode
-                    }
-                }
-            },
-            editor: {
+			editor: {
                 include: true,
                 id: 'editor',
                 type: 'titlePane',
                 path: 'gis/dijit/Editor',
                 title: 'Editor',
                 open: false,
-                position: 8,
+                position: 7,
                 options: {
                     map: true,
                     mapClickMode: true,
@@ -387,20 +350,38 @@ define([
                     }
                 }
             },
-            streetview: {
+            bookmarks: {
                 include: true,
-                id: 'streetview',
+                id: 'bookmarks',
                 type: 'titlePane',
-                canFloat: true,
+                path: 'gis/dijit/Bookmarks',
+                title: 'Bookmarks',
+                open: false,
+                position: 8,
+                options: 'config/bookmarks'
+            },
+            directions: {
+                include: true,
+                id: 'directions',
+                type: 'titlePane',
+                path: 'gis/dijit/Directions',
+                title: 'Directions',
+                open: false,
                 position: 9,
-                path: 'gis/dijit/StreetView',
-                title: 'Google Street View',
                 options: {
                     map: true,
-                    mapClickMode: true,
-                    mapRightClickMenu: true
+                    mapRightClickMenu: true,
+                    options: {
+                        routeTaskUrl: 'http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route',
+                        routeParams: {
+                            directionsLanguage: 'en-US',
+                            directionsLengthUnits: units.MILES
+                        },
+                        active: false //for 3.12, starts active by default, which we dont want as it interfears with mapClickMode
+                    }
                 }
             },
+            
             help: {
                 include: true,
                 id: 'help',
@@ -408,8 +389,39 @@ define([
                 path: 'gis/dijit/Help',
                 title: 'Help',
                 options: {}
-            }
+            },
+			exportDialog: {
+    			include: true,
+    			id: 'export',
+    			type: 'floating',
+    			path: 'gis/dijit/Export',
+    			title: 'Export',
+    			options: {}
+			},
+			
+			attributesTable: {
+    			include: true,
+    			id: 'attributesContainer',
+    			type: 'domNode',
+    			srcNodeRef: 'attributesContainer',
+    			path: 'gis/dijit/AttributesTable',
+    			options: {
+        			map: true,
+        			mapClickMode: true,
 
-        }
+        			// use a tab container for multiple tables or
+        			// show only a single table
+        			useTabs: true,
+
+        			// used to open the sidebar after a query has completed
+        			sidebarID: 'sidebarBottom',
+   
+    			}
+			},
+	
+        }  // end of attribute table
+		
+		
+		
     };
 });
